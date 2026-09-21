@@ -554,6 +554,46 @@
     }
 
     /* ========================================
+       PROJECT SLIDESHOW
+       ======================================== */
+    function initSlideshows() {
+        var slideshows = document.querySelectorAll('[data-slideshow]');
+
+        slideshows.forEach(function (slideshow) {
+            var img = slideshow.querySelector('.project-image');
+            var images = JSON.parse(slideshow.getAttribute('data-images'));
+            if (!img || images.length <= 1) return;
+
+            var currentIndex = 0;
+            var intervalId = null;
+
+            function showNext() {
+                img.classList.add('fading');
+                setTimeout(function () {
+                    currentIndex = (currentIndex + 1) % images.length;
+                    img.src = images[currentIndex];
+                    img.classList.remove('fading');
+                }, 600);
+            }
+
+            function startSlideshow() {
+                if (intervalId) return;
+                intervalId = setInterval(showNext, 2500);
+            }
+
+            function stopSlideshow() {
+                clearInterval(intervalId);
+                intervalId = null;
+            }
+
+            slideshow.addEventListener('mouseenter', stopSlideshow);
+            slideshow.addEventListener('mouseleave', startSlideshow);
+
+            startSlideshow();
+        });
+    }
+
+    /* ========================================
        INIT ALL
        ======================================== */
     updateScrollProgress();
@@ -568,5 +608,6 @@
     initContactTypewriter();
     initAboutStats();
     initAchievementsVisual();
+    initSlideshows();
 
 })();
